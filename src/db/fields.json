@@ -1,0 +1,18 @@
+{   "input": [ 
+        {   "type": [
+                "checkbox",
+                "text",
+                "password",
+                "email",
+                "radio",
+                "date",
+                "search",
+                "tel",
+                "url",
+                "textarea"
+
+            ]
+
+        }
+    ]
+}
