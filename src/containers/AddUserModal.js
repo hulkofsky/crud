@@ -5,6 +5,7 @@ import {addUser} from '../actions/users';
 import bcrypt from 'bcryptjs'
 import {Modal, Button, Header, Input} from 'semantic-ui-react';
 
+
 const doc=document;
 
 const modalStyle = {
@@ -34,14 +35,70 @@ class AddUserModal extends Component {
         });
     };
 
+    isEmail(value) {
+        const emailPattern = /^\w+@\w+\.\w{2,4}$/i;
+        if(value.search(emailPattern)|| !value) {
+            showError('Invalid email!');
+            return false;
+        } else {
+            return true;
+        }
+    };
+
+    isName(value) {
+        const namePattern = /^[a-z]+([-_]?[a-z0-9]+){0,2}$/i;
+        if(value.search(namePattern)|| !value)  {
+            showError('Invalid name!');
+            return false;
+        } else { 
+            return true;
+        }
+    };
+
+    isPassword(value) {
+        const passPattern = /^(?=.*\d)(?=.*[a-z])[0-9a-zA-Z]{6,}$/;
+        if(value.search(namePattern)|| !value)  {
+            showError('Password must be at least 6 symbols and contain at least 1 number!');
+            return false;
+        } else { 
+            return true;
+        }
+    };
+
+    isPhoto(value) {
+        const filesExt = ['jpg', 'gif', 'png'];
+        
+        if (value) {
+            const parts = value.split('.');
+            if(filesExt.join().search(parts[parts.length - 1]) = -1){
+                showError(`Only "jpg", "gif", "png" images supported!`);
+            }
+        } else {
+            const photo = 'http://icons.iconarchive.com/icons/artua/dragon-soft/512/User-icon.png'
+            return photo
+        } 
+    }
+
+    showError(message) {
+        let errorDiv = doc.createElement('div');
+
+        if(doc.querySelector('.error')) doc.querySelector('.error').remove();
+        errorDiv.classList.add('error');
+        errorDiv.innerHTML = message;
+        doc.querySelector('button[name=addUser]').parentElement.appendChild(errorDiv);
+    };
+
     addUser(){
         const fName = doc.querySelector('input[name=firstName]').value;
         const lName = doc.querySelector('input[name=lastName]').value;
         const email = doc.querySelector('input[name=email]').value;
         const photo = doc.querySelector('input[type=file]').files[0];
         let password = doc.querySelector('input[name=password]').value;
-        const hash = bcrypt.hashSync(password, 8);
+
+        if(this.isEmail(email)) return;
        
+
+        const hash = bcrypt.hashSync(password, 8);
         password = hash;
         this.fileToBase64(photo).then(image => {
             const newUser = {
